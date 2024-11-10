@@ -1,0 +1,17 @@
+{
+    "name": "raita/php-study",
+    "autoload": {
+        "psr-4": {
+            "Raita\\PhpStudy\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Raita Watanabe",
+            "email": "watanaberit20171129@gmail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^3.7"
+    }
+}

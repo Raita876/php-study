@@ -4,3 +4,9 @@ tasks:
   chmod:
     cmds:
       - find . -type f -name "*main.php" | xargs chmod 755
+  save:
+    vars:
+      dir: '{{ default "00_default" .dir }}'
+    cmds:
+      - mkdir -p {{ .dir }}
+      - cp ./main.php {{ .dir }}/main.php

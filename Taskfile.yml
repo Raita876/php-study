@@ -1,5 +1,5 @@
 version: "3"
-
+dotenv: [".env"]
 tasks:
   chmod:
     cmds:
@@ -10,3 +10,23 @@ tasks:
     cmds:
       - mkdir -p {{ .dir }}
       - cp ./main.php {{ .dir }}/main.php
+  up:
+    cmds:
+      - docker compose up -d
+      - |
+        until curl -u "admin:${OPENSEARCH_INITIAL_ADMIN_PASSWORD}" -k --connect-timeout 10 https://localhost:9200/; do 
+          echo wait...; 
+          sleep 3; 
+        done
+      - |
+        curl -u "admin:${OPENSEARCH_INITIAL_ADMIN_PASSWORD}" -k -X POST -H "Content-Type: application/x-ndjson" "https://localhost:9200/users/_bulk" -d '
+        { "index" : { "_index" : "users", "_id" : "1" } }
+        { "name": "alice", "age": 24, "description": "product manager" }
+        { "index" : { "_index" : "users", "_id" : "2" } }
+        { "name": "bob", "age": 32, "description": "frontend engineer" }
+        { "index" : { "_index" : "users", "_id" : "3" } }
+        { "name": "carol", "age": 27, "description": "backend engineer" }
+        '
+  down:
+    cmds:
+      - docker compose down
